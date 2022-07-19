@@ -1,0 +1,10 @@
+a 1-5: abcdj-ok
+z 2-4: asfalseiruqwo-not
+b 3-6: bhhkkbbjjjb-ok
+b 3-6: bhhkkbbjjjbbbbbb-not
+b 3-6: bhhkkbbjjj-ok
+b 1: basdasda-ok
+a 2: aafgfgfg-ok
+aa
+aa 2: aa-not
+
