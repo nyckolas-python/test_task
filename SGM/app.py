@@ -23,14 +23,15 @@ u_path = input("Enter the path and filename -> ") # open the dialog
 
 def csv_data():
         try:
-            server.check_json(json_input)
+            json_input = server.check_json(json_input)
             if type(json_input) == list:
                 input_df = pd.DataFrame.from_records(json_input, )
             else:
                 input_df = pd.DataFrame([json_input])
             df = pd.read_csv('db_table.csv')
-            server.add_columns(df)
-            server.filter_data(input_df, df)
+            result = server.add_columns(df)
+            result = server.filter_data(input_df, df)
+            return result
         except Exception as e:
                 """exceptions can be handled later in this block"""
                 print(e)

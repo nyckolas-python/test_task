@@ -21,7 +21,7 @@ class Output(Dict):
     source: str
     raw_data: list
 
-def check_json(json_input: dict)-> bool:
+def check_json(json_input: dict)-> dict:
     """Validating password by regular expression."""
     """For example below:"""
     """{"code1": "shA", "code2": "W"}"""
@@ -34,6 +34,7 @@ def check_json(json_input: dict)-> bool:
         if not regexp_result:
             raise exceptions.NotCorrectJsonMessage(
                 "Not Correct format JSON input, please check.")
+        return json_input
 
 def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     """Add new column 'bitCode' and data to DataFrame"""
@@ -70,15 +71,20 @@ def filter_data(input_df: pd.DataFrame, df: pd.DataFrame) -> dict:
         filter_list.append({key: value})
         """Now filter_list looks like:
         [{('shC', 'C'): ['S1', 'S2', 'S4']}]"""
+        
+        result = {}
 
         if len(value) > 0:
             for j in value:
                 raws_key = key + (j,)
                 raw_data = df[(df['code1'].str[:3] == input_df['code1'][i]) & (df['code2'].str[:1] == input_df['code2'][i]) & (df['source'] == j)]
                 value_raws = raw_data[ ['updateDate', 'code1', 'code2', 'code3', 'value', 'bitCode', 'siCode'] ].values.tolist()
-                result = {raws_key: value_raws}
-                #print(result)
-                return result
+                if result == {}:
+                    result = {raws_key: value_raws}
+                else:
+                    result_list = []
+                    result_list.append(result)
+            return result if result_list == [] else result_list
         else:
             raise exceptions.DataFrameError(
                 "Сan't filter the Data, please check your DataFrame input.")
