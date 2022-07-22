@@ -22,7 +22,9 @@ json_input_list = [{"code1": "shA", "code2": "W"},
 
 def csv_data(json_input):
         try:
-            u_path = input("Enter the path and filename -> ") # open the dialog
+            u_path = input("Enter the path and filename of press Enter if 'db_table.csv'-> ") # open the dialog
+            # 'db_table.csv' by default
+            u_path = 'db_table.csv' if u_path == '' else u_path
             """Validating json_input by regular expression."""
             server.check_json(json_input)
             # this block can be removed, made to check the list of json
@@ -35,6 +37,8 @@ def csv_data(json_input):
             result = server.add_columns(df)
             
             result = server.filter_data(input_df, df)
+            
+            server.ask_output(result)
             return result
 
         except Exception as e:
@@ -43,7 +47,7 @@ def csv_data(json_input):
 
 
 def test():
-    print(csv_data(json_input))
+    csv_data(json_input)
 
 
 if __name__ == '__main__':
