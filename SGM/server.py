@@ -100,3 +100,21 @@ def filter_data(input_df: pd.DataFrame, df: pd.DataFrame) -> dict:
         else:
             raise exceptions.DataFrameError(
                 "Сan't filter the Data, please check your DataFrame input.")
+            
+def ask_output(result):
+    print("Do you need export JSON file ?")
+    #print("Or press the enter to print the output.json")
+    u_path_output = input("Enter the path and filename of press Enter if 'output.json'-> ")
+    u_path_output = 'output.json' if u_path_output == '' else u_path_output
+    with open(u_path_output, 'w') as f:
+        try:
+            with open(u_path_output,'w') as out:
+                # I think there's a way more JSON. but I haven't looked yet.
+
+                for key,value in result.items():
+                    out.write(f"{{{key}:{value}}}\n")
+                print(f"File {u_path_output} was write successfully ...")
+
+        except Exception as e:
+                """exceptions can be handled later in this block"""
+                print(e)
