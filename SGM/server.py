@@ -46,12 +46,13 @@ def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     df.loc[df['source'] != 'S1', 'bitCode'] = '0'
     print("Add new column 'bitCode' and data is OK")
     
-    """Add new column 'bitCode' and data to DataFrame"""
-    """siCode – if bitCode equals 1: A if code3 is AP or AH, B if code3 is PRD,
+    """Add new column 'siCode' and data to DataFrame"""
+    """'siCode' - if bitCode equals 1: A. if code3 is AP or AH, B if code3 is PRD,
     BpA if code3 is YLD, otherwise undefined (None);
     if bitCode equals 0: H if code3 is AP or AH, T if code3 is PRD,
     TpH if code3 is YLD, otherwise undefined (None)."""
- 
+    
+    # Block below need Refactoring using methon or function
     df.loc[(df['bitCode'] == '1') & (df['code3'] == 'AP'), 'siCode'] = 'A'
     df.loc[(df['bitCode'] == '1') & (df['code3'] == 'AH'), 'siCode'] = 'A'
     df.loc[(df['bitCode'] == '1') & (df['code3'] == 'PRD'), 'siCode'] = 'B'
@@ -61,11 +62,17 @@ def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     df.loc[(df['bitCode'] == '0') & (df['code3'] == 'PRD'), 'siCode'] = 'T'
     df.loc[(df['bitCode'] == '0') & (df['code3'] == 'YLD'), 'siCode'] = 'TpH'
     df.loc[pd.isnull(df['siCode']), 'siCode'] = None
-    print("Add new column 'siCode' and data is OK")
+    print("Add new column 'siCode' and data is OK ...")
     return df
 
 def filter_data(input_df: pd.DataFrame, df: pd.DataFrame) -> dict:
-    i=0
+    """Selects data by two steps"""
+    """First step - select data from code1 and code2"""
+    """First step result like {('shC', 'C'): ['S1', 'S2', 'S4']}"""
+    """Second step - filter data and get data frame"""
+    """Result Looks Like {(#G_code1#, #G_code2#, #sourceK#): [data rows]}"""
+    
+    #i=0
     filter_list = []
     result_list = []
     for i in range (input_df.shape[0]):
@@ -82,12 +89,13 @@ def filter_data(input_df: pd.DataFrame, df: pd.DataFrame) -> dict:
         if len(value) > 0:
             for j in value:
                 raws_key = key + (j,)
-                raw_data = df[(df['code1'].str[:3] == input_df['code1'][i]) & (df['code2'].str[:1] == input_df['code2'][i]) & (df['source'] == j)]
-                value_raws = raw_data[ ['updateDate', 'code1', 'code2', 'code3', 'value', 'bitCode', 'siCode'] ].values.tolist()
+                raws_data = df[(df['code1'].str[:3] == input_df['code1'][i]) & (df['code2'].str[:1] == input_df['code2'][i]) & (df['source'] == j)]
+                value_raws = raws_data[ ['updateDate', 'code1', 'code2', 'code3', 'value', 'bitCode', 'siCode'] ].values.tolist()
                 if result == {}:
                     result = {raws_key: value_raws}
                 else:
                     result_list.append(result)
+            print("Data filtered successfully ...")
             return result if result_list == [] else result_list
         else:
             raise exceptions.DataFrameError(

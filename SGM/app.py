@@ -23,14 +23,17 @@ json_input_list = [{"code1": "shA", "code2": "W"},
 def csv_data(json_input):
         try:
             u_path = input("Enter the path and filename -> ") # open the dialog
-            print(json_input)
+            """Validating json_input by regular expression."""
             server.check_json(json_input)
+            # this block can be removed, made to check the list of json
             if type(json_input) == list:
                 input_df = pd.DataFrame.from_records(json_input, )
             else:
                 input_df = pd.DataFrame([json_input])
             df = pd.read_csv(u_path)
+            """Add new column 'bitCode', 'siCode' and add data to DataFrame"""
             result = server.add_columns(df)
+            
             result = server.filter_data(input_df, df)
             return result
 
