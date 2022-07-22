@@ -19,10 +19,11 @@ json_input_list = [{"code1": "shA", "code2": "W"},
                 {"code1": "shC", "code2": "S"},
                 {"code1": "shC", "code2": "C"}]
 
-u_path = input("Enter the path and filename -> ") # open the dialog
+
 
 def csv_data():
         try:
+            u_path = input("Enter the path and filename -> ") # open the dialog
             json_input = server.check_json(json_input)
             if type(json_input) == list:
                 input_df = pd.DataFrame.from_records(json_input, )
@@ -32,6 +33,7 @@ def csv_data():
             result = server.add_columns(df)
             result = server.filter_data(input_df, df)
             return result
+
         except Exception as e:
                 """exceptions can be handled later in this block"""
                 print(e)
