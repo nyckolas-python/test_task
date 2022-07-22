@@ -48,12 +48,14 @@ def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     if bitCode equals 0: H if code3 is AP or AH, T if code3 is PRD,
     TpH if code3 is YLD, otherwise undefined (None)."""
  
-    df.loc[(df['bitCode'] == '1') & (df['code3'] == ('AP' or 'AH')), 'siCode'] = 'A'
+    df.loc[(df['bitCode'] == '1') & (df['code3'] == 'AP'), 'siCode'] = 'A'
+    df.loc[(df['bitCode'] == '1') & (df['code3'] == 'AH'), 'siCode'] = 'A'
     df.loc[(df['bitCode'] == '1') & (df['code3'] == 'PRD'), 'siCode'] = 'B'
-    df.loc[(df['bitCode'] == '1') & (df['code3'] == 'BpA'), 'siCode'] = 'YLD'
-    df.loc[(df['bitCode'] == '0') & (df['code3'] == ('AP' or 'AH')), 'siCode'] = 'H'
+    df.loc[(df['bitCode'] == '1') & (df['code3'] == 'YLD'), 'siCode'] = 'BpA'
+    df.loc[(df['bitCode'] == '0') & (df['code3'] == 'AP'), 'siCode'] = 'H'
+    df.loc[(df['bitCode'] == '0') & (df['code3'] == 'AH'), 'siCode'] = 'H'
     df.loc[(df['bitCode'] == '0') & (df['code3'] == 'PRD'), 'siCode'] = 'T'
-    df.loc[(df['bitCode'] == '0') & (df['code3'] == 'TpH'), 'siCode'] = 'YLD'
+    df.loc[(df['bitCode'] == '0') & (df['code3'] == 'YLD'), 'siCode'] = 'TpH'
     df.loc[pd.isnull(df['siCode']), 'siCode'] = None
     return df
 
