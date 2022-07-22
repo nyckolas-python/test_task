@@ -113,7 +113,7 @@ def ask_output(result):
 
                 for key,value in result.items():
                     out.write(f"{{{key}:{value}}}\n")
-                print(f"File {u_path_output} was write successfully ...")
+                print(f"File '{u_path_output}' was write successfully ...")
 
         except Exception as e:
                 """exceptions can be handled later in this block"""
