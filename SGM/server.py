@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Python 3.8.1
+import json
 import pandas as pd
 from typing import Dict, NamedTuple, Optional
 import re
@@ -22,7 +23,7 @@ class Output(Dict):
     raw_data: list
 
 def check_json(json_input: dict)-> dict:
-    """Validating password by regular expression."""
+    """Validating json_input by regular expression."""
     """For example below:"""
     """{"code1": "shA", "code2": "W"}"""
     """{"code1": "shB", "code2": "W"}"""
@@ -30,11 +31,12 @@ def check_json(json_input: dict)-> dict:
         [check_json(json) for json in json_input]
     else:    
         pattern = r"\{(\"|\')(code1){1}(\"|\'):\s+(\"|\')(sh)[A-Z](\"|\'),\s+(\"|\')(code2)(\"|\'):\s+(\"|\')[A-Z](\"|\')\}"
-        regexp_result = re.match(pattern, json_input)
+        json_str = json.dumps(json_input)
+        regexp_result = re.match(pattern, json_str)
         if not regexp_result:
             raise exceptions.NotCorrectJsonMessage(
                 "Not Correct format JSON input, please check.")
-        return json_input
+        print("Validating json_input is OK ...")
 
 def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     """Add new column 'bitCode' and data to DataFrame"""
@@ -42,6 +44,7 @@ def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     
     df.loc[df['source'] == 'S1', 'bitCode'] = '1'
     df.loc[df['source'] != 'S1', 'bitCode'] = '0'
+    print("Add new column 'bitCode' and data is OK")
     
     """Add new column 'bitCode' and data to DataFrame"""
     """siCode – if bitCode equals 1: A if code3 is AP or AH, B if code3 is PRD,
@@ -58,11 +61,13 @@ def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     df.loc[(df['bitCode'] == '0') & (df['code3'] == 'PRD'), 'siCode'] = 'T'
     df.loc[(df['bitCode'] == '0') & (df['code3'] == 'YLD'), 'siCode'] = 'TpH'
     df.loc[pd.isnull(df['siCode']), 'siCode'] = None
+    print("Add new column 'siCode' and data is OK")
     return df
 
 def filter_data(input_df: pd.DataFrame, df: pd.DataFrame) -> dict:
     i=0
     filter_list = []
+    result_list = []
     for i in range (input_df.shape[0]):
         filter_df = df[(df['code1'].str[:3] == input_df['code1'][i]) & (df['code2'].str[:1] == input_df['code2'][i])]
     #   filter_list.append({(input_df['code1'][i], input_df['code2'][i]): (list(filter_df['source'].unique()), filter_df['source'].shape[0])})
@@ -82,7 +87,6 @@ def filter_data(input_df: pd.DataFrame, df: pd.DataFrame) -> dict:
                 if result == {}:
                     result = {raws_key: value_raws}
                 else:
-                    result_list = []
                     result_list.append(result)
             return result if result_list == [] else result_list
         else:

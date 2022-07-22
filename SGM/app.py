@@ -2,7 +2,6 @@
 # Python 3.8.1
 
 import pandas as pd
-import re
 
 import server
 import exceptions
@@ -21,10 +20,11 @@ json_input_list = [{"code1": "shA", "code2": "W"},
 
 
 
-def csv_data():
+def csv_data(json_input):
         try:
             u_path = input("Enter the path and filename -> ") # open the dialog
-            json_input = server.check_json(json_input)
+            print(json_input)
+            server.check_json(json_input)
             if type(json_input) == list:
                 input_df = pd.DataFrame.from_records(json_input, )
             else:
@@ -39,10 +39,8 @@ def csv_data():
                 print(e)
 
 
-
-
 def test():
-    print(csv_data())
+    print(csv_data(json_input))
 
 
 if __name__ == '__main__':
