@@ -29,7 +29,7 @@ def csv_data():
                 input_df = pd.DataFrame.from_records(json_input, )
             else:
                 input_df = pd.DataFrame([json_input])
-            df = pd.read_csv('db_table.csv')
+            df = pd.read_csv(u_path)
             result = server.add_columns(df)
             result = server.filter_data(input_df, df)
             return result
