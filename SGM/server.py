@@ -182,7 +182,6 @@ def filter_data_sql(source_dict: SourcesDict, df: pd.DataFrame) ->list:
     """Second step - filter data and get data frame"""
     """Result Looks Like {(#G_code1#, #G_code2#, #sourceK#): [data rows]}"""
     
-    result = {}
     result_list = []
 
     if len(source_dict.source_list) > 0:
@@ -195,12 +194,9 @@ def filter_data_sql(source_dict: SourcesDict, df: pd.DataFrame) ->list:
             '''
             raw_data = ps.sqldf(filter_query, locals())
             value_raws = raw_data.values.tolist()
-            if result == {}:
-                result = {raws_key: value_raws}
-            else:
-                result_list.append(result)
+            result_list.append({raws_key: value_raws})
         print("Data filtered successfully ...")
-        return result if result_list == [] else result_list
+        return result_list
     else:
         raise exceptions.DataFrameError(
             "Сan't filter the Data, please check your DataFrame input.")
