@@ -21,9 +21,9 @@ json_input_list = [{"code1": "shA", "code2": "W"},
 
 def csv_data(json_input):
     try:
-        u_path = input("Enter the path and filename of press Enter if 'db_table.csv'-> ") # open the dialog
+        u_path = input("Enter the path and filename of press Enter if '/data/db_table.csv'-> ") # open the dialog
         # 'db_table.csv' by default
-        u_path = 'db_table.csv' if u_path == '' else u_path
+        u_path = '/data/db_table.csv' if u_path == '' else u_path
         """Validating json_input by regular expression."""
         json_input = server.check_json(json_input)
 
@@ -43,9 +43,9 @@ def csv_data(json_input):
     
 def csv_sql_data(json_input):
     try:
-        u_path = input("Enter the path and filename of press Enter if 'db_table.csv'-> ") # open the dialog
+        u_path = input("Enter the path and filename of press Enter if '/data/db_table.csv'-> ") # open the dialog
         # 'db_table.csv' by default
-        u_path = 'db_table.csv' if u_path == '' else u_path
+        u_path = '/data/db_table.csv' if u_path == '' else u_path
         """Validating json_input by regular expression."""
         json_input = server.check_json(json_input)
 

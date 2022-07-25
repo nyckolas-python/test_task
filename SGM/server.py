@@ -116,30 +116,28 @@ def filter_data(source_dict: SourcesDict, df: pd.DataFrame) ->list:
 
 def ask_output(source_dict:SourcesDict, result_list:list):
     u_path = input("press Enter to export -> 'list_of_sources.json' and 'data_source_N.json'")
-    u_path_output = 'list_of_sources.json'
+    u_path_output = '/data/list_of_sources.json'
     
-    with open(u_path_output, 'w') as f:
-        # try:
-            with open(u_path_output,'w') as out:
-                # write file 'list_of_sources.json'
-                out.write(f"{source_dict.json}")
-                print(f"File '{u_path_output}' was write successfully ...")
-        # except Exception as e:
-        #     """exceptions can be handled later in this block"""
-        #     print(e)
+    try:
+        with open(u_path_output,'w') as out:
+            # write file 'list_of_sources.json'
+            out.write(f"{source_dict.json}")
+            print(f"File '{u_path_output}' was write successfully ...")
+    except Exception as e:
+        """exceptions can be handled later in this block"""
+        print(e)
         
     for index,source in enumerate(source_dict.source_list):
-        u_path_output = f"data_source_{source}.json"
-        with open(u_path_output, 'w') as f:
-            try:
-                with open(u_path_output,'w') as out:
-                    # write file 'data_source_N.json'
-                    out.write(f"{result_list[index]}")
-                    print(f"File 'data_source_{source}.json' was write successfully ...")
+        u_path_output = f"/data/data_source_{source}.json"
+        try:
+            with open(u_path_output,'w') as out:
+                # write file 'data_source_N.json'
+                out.write(f"{result_list[index]}")
+                print(f"File '/data/data_source_{source}.json' was write successfully ...")
 
-            except IndexError as e:
-                    """exceptions can be handled later in this block"""
-                    pass
+        except IndexError as e:
+                """exceptions can be handled later in this block"""
+                pass
 
 def add_columns_sql(df: pd.DataFrame) -> pd.DataFrame:
     # use SQL 
