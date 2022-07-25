@@ -8,16 +8,11 @@ import re
 import exceptions
 
 class InputJson():
-    """Structure input. On the input:dict -> string atributes returns on the output
-
-    code1: str	(first key of input:dict)
-    
-    code2: str	(second key of input:dict)
-    
-    G_code1: str	(first value of input:dict)
-    
-    G_code2: str	(second value of input:dict)
-    
+    """Structure input. On the input: dict -> string atributes returns on the output\n
+    code1: str	(first key of input: dict)\n
+    code2: str	(second key of input: dict)\n
+    G_code1: str	(first value of input: dict)\n
+    G_code2: str	(second value of input: dict)\n
     json: dict	(original dictionary json)
     """
     def __init__(self, json_input:dict) -> str:
@@ -27,14 +22,11 @@ class InputJson():
         self.G_code2 = str(list(json_input.values())[1])
         self.json = json_input
 
-
 class SourcesDict():
-    """Structure output. On the input:dict -> atributes    
-    
-    G_code1: str	(first value of input:dict)
-    
-    G_code2: str	(second value of input:dict)
-    source_list: List   (list of sources)
+    """Structure output. On the input: dict -> atributes\n
+    G_code1: str	(first value of input: dict)\n
+    G_code2: str	(second value of input: dict)\n
+    source_list: list   (list of sources)\n
     json: dict	(original dictionary json)
     """
     def __init__(self,dict_input):
@@ -47,10 +39,10 @@ class SourcesDict():
 
 
 def check_json(json_input: dict)-> InputJson:
-    """Validating json_input by regular expression."""
-    """For example below:"""
-    """{"code1": "shA", "code2": "W"}"""
-    """{"code1": "shB", "code2": "W"}""" 
+    """Validating json_input by regular expression.\n
+    For example below:\n
+    {"code1": "shA", "code2": "W"}\n
+    {"code1": "shC", "code2": "C"}"""
     pattern = r"\{(\"|\')(code1){1}(\"|\'):\s+(\"|\')(sh)[A-Z](\"|\'),\s+(\"|\')(code2)(\"|\'):\s+(\"|\')[A-Z](\"|\')\}"
     json_str = json.dumps(json_input)
     regexp_result = re.match(pattern, json_str)
@@ -61,18 +53,17 @@ def check_json(json_input: dict)-> InputJson:
     return InputJson(json_input)
 
 def add_columns(df: pd.DataFrame) ->pd.DataFrame:
-    """Add new column 'bitCode' and data to DataFrame"""
-    """bitCode – 0 or 1. bitCode equals 1 if source equals S1, otherwise it is 0."""
+    """Add new column 'bitCode' and data to DataFrame\n
+    bitCode – 0 or 1. bitCode equals 1 if source equals S1, otherwise it is 0.\n
+    Add new column 'siCode' and data to DataFrame\n
+    'siCode' - if bitCode equals 1: A. if code3 is AP or AH, B if code3 is PRD,\n
+    BpA if code3 is YLD, otherwise undefined (None);\n
+    if bitCode equals 0: H if code3 is AP or AH, T if code3 is PRD,\n
+    TpH if code3 is YLD, otherwise undefined (None)."""
     
     df.loc[df['source'] == 'S1', 'bitCode'] = '1'
     df.loc[df['source'] != 'S1', 'bitCode'] = '0'
     print("Add new column 'bitCode' and data is OK")
-    
-    """Add new column 'siCode' and data to DataFrame"""
-    """'siCode' - if bitCode equals 1: A. if code3 is AP or AH, B if code3 is PRD,
-    BpA if code3 is YLD, otherwise undefined (None);
-    if bitCode equals 0: H if code3 is AP or AH, T if code3 is PRD,
-    TpH if code3 is YLD, otherwise undefined (None)."""
     
     # Block below need Refactoring using methon or function
     df.loc[(df['bitCode'] == '1') & (df['code3'] == 'AP'), 'siCode'] = 'A'
@@ -88,19 +79,19 @@ def add_columns(df: pd.DataFrame) ->pd.DataFrame:
     return df
 
 def source_dict(json_input: InputJson, df: pd.DataFrame) -> dict:
-    """First step result like {('shC', 'C'): ['S1', 'S2', 'S4']}"""
+    """First step Result Looks Like  {('shC', 'C'): ['S1', 'S2', 'S4']}"""
 
     filter_df = df[(df['code1'].str[:3] == json_input.G_code1) & (df['code2'].str[:1] == json_input.G_code2)]
     key = (json_input.G_code1, json_input.G_code2)
-    value = list(filter_df['source'].unique())     
+    value = list(filter_df['source'].unique())
     source_dict = SourcesDict({key: value})
     """Now we have source_dict looks like:
     {('shC', 'C'): ['S1', 'S2', 'S4']}"""
     return source_dict
     
 def filter_data(source_dict: SourcesDict, df: pd.DataFrame) ->list:
-    """Second step - filter data and get data frame"""
-    """Result Looks Like {(#G_code1#, #G_code2#, #sourceK#): [data rows]}"""
+    """Second step - filter data and get data frame\n
+    Result Looks Like {(#G_code1#, #G_code2#, #sourceK#): [data rows]}"""
     result_list = []
     if len(source_dict.source_list) > 0:
         for j in source_dict.source_list:
@@ -138,9 +129,18 @@ def ask_output(source_dict:SourcesDict, result_list:list):
         except IndexError as e:
                 """exceptions can be handled later in this block"""
                 pass
+            
+"""PART OF SQL FUNCTIONS"""
 
 def add_columns_sql(df: pd.DataFrame) -> pd.DataFrame:
-    # use SQL 
+    """Add new column 'bitCode' and data to DataFrame\n
+    bitCode – 0 or 1. bitCode equals 1 if source equals S1, otherwise it is 0.\n
+    Add new column 'siCode' and data to DataFrame\n
+    'siCode' - if bitCode equals 1: A. if code3 is AP or AH, B if code3 is PRD,\n
+    BpA if code3 is YLD, otherwise undefined (None);\n
+    if bitCode equals 0: H if code3 is AP or AH, T if code3 is PRD,\n
+    TpH if code3 is YLD, otherwise undefined (None)."""
+    
     add_columns_query = '''
         SELECT *,
             CASE source WHEN 'S1' THEN '1' ELSE '0'
@@ -161,8 +161,7 @@ def add_columns_sql(df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 def source_dict_sql(json_input: InputJson, df: pd.DataFrame) -> dict:
-    """Selects data"""
-    """First step - select data from code1 and code2"""
+    """First step Result Looks Like  {('shC', 'C'): ['S1', 'S2', 'S4']}"""
 
     filter_sql_query = f'''
     SELECT DISTINCT (source)
@@ -177,8 +176,8 @@ def source_dict_sql(json_input: InputJson, df: pd.DataFrame) -> dict:
     return source_dict
 
 def filter_data_sql(source_dict: SourcesDict, df: pd.DataFrame) ->list:
-    """Second step - filter data and get data frame"""
-    """Result Looks Like {(#G_code1#, #G_code2#, #sourceK#): [data rows]}"""
+    """Second step - filter data and get data frame\n
+    Result Looks Like {(#G_code1#, #G_code2#, #sourceK#): [data rows]}"""
     
     result_list = []
 
