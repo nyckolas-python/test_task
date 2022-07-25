@@ -115,20 +115,18 @@ def filter_data(source_dict: SourcesDict, df: pd.DataFrame) ->list:
             "Сan't filter the Data, please check your DataFrame input.")
 
 def ask_output(source_dict:SourcesDict, result_list:list):
-    print("Do you need export JSON file ?")
-    #print("Or press the enter to print the output.json")
-    u_path = input("press Enter to write file -> 'list_of_sources.json' and 'data_source_N.json'")
+    u_path = input("press Enter to export -> 'list_of_sources.json' and 'data_source_N.json'")
     u_path_output = 'list_of_sources.json'
     
     with open(u_path_output, 'w') as f:
-        try:
+        # try:
             with open(u_path_output,'w') as out:
                 # write file 'list_of_sources.json'
                 out.write(f"{source_dict.json}")
                 print(f"File '{u_path_output}' was write successfully ...")
-        except Exception as e:
-            """exceptions can be handled later in this block"""
-            print(e)
+        # except Exception as e:
+        #     """exceptions can be handled later in this block"""
+        #     print(e)
         
     for index,source in enumerate(source_dict.source_list):
         u_path_output = f"data_source_{source}.json"
@@ -139,11 +137,11 @@ def ask_output(source_dict:SourcesDict, result_list:list):
                     out.write(f"{result_list[index]}")
                     print(f"File 'data_source_{source}.json' was write successfully ...")
 
-            except Exception as e:
+            except IndexError as e:
                     """exceptions can be handled later in this block"""
-                    print(e)
+                    pass
 
-def add_columns_sql(df: pd.DataFrame) ->pd.DataFrame:
+def add_columns_sql(df: pd.DataFrame) -> pd.DataFrame:
     # use SQL 
     add_columns_query = '''
         SELECT *,
@@ -160,7 +158,8 @@ def add_columns_sql(df: pd.DataFrame) ->pd.DataFrame:
             END as siCode
         FROM df;
         '''
-    df = ps.sqldf(add_columns_query, globals())
+    df = ps.sqldf(add_columns_query, locals())
+    print("Add new column 'bitCode', 'siCode' and data is OK ...")
     return df
 
 def source_dict_sql(json_input: InputJson, df: pd.DataFrame) -> dict:
@@ -172,12 +171,11 @@ def source_dict_sql(json_input: InputJson, df: pd.DataFrame) -> dict:
     FROM df
     WHERE code1 LIKE '{json_input.G_code1}%' AND code2 LIKE '{json_input.G_code2}%';
     '''
-    unique_source = ps.sqldf(filter_sql_query, globals())
+    unique_source = ps.sqldf(filter_sql_query, locals())
     key = (json_input.G_code1, json_input.G_code2) # ('shC', 'C')
     value = unique_source['source'].tolist() # ['S1', 'S2', 'S4']
     source_dict = SourcesDict({key: value})
-    """Now we have source_dict looks like:
-    {('shC', 'C'): ['S1', 'S2', 'S4']}"""
+    print(f"List of sources {source_dict.json} is OK ...")
     return source_dict
 
 def filter_data_sql(source_dict: SourcesDict, df: pd.DataFrame) ->list:
@@ -193,9 +191,9 @@ def filter_data_sql(source_dict: SourcesDict, df: pd.DataFrame) ->list:
             filter_query = f'''
             SELECT updateDate, code1, code2, code3, value, bitCode, siCode
             FROM df
-            WHERE code1 LIKE '{source_dict.G_code1}%' AND code2 LIKE '{source_dict.G_code2}%' AND source = {source};
+            WHERE code1 LIKE '{source_dict.G_code1}%' AND code2 LIKE '{source_dict.G_code2}%' AND source = '{source}';
             '''
-            raw_data = ps.sqldf(filter_query, globals())
+            raw_data = ps.sqldf(filter_query, locals())
             value_raws = raw_data.values.tolist()
             if result == {}:
                 result = {raws_key: value_raws}
