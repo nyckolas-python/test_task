@@ -116,7 +116,7 @@ def filter_data(source_dict: SourcesDict, df: pd.DataFrame) ->list:
 
 def ask_output(source_dict:SourcesDict, result_list:list):
     u_path = input("press Enter to export -> 'list_of_sources.json' and 'data_source_N.json'")
-    u_path_output = '/data/list_of_sources.json'
+    u_path_output = 'data/list_of_sources.json'
     
     try:
         with open(u_path_output,'w') as out:
@@ -128,12 +128,12 @@ def ask_output(source_dict:SourcesDict, result_list:list):
         print(e)
         
     for index,source in enumerate(source_dict.source_list):
-        u_path_output = f"/data/data_source_{source}.json"
+        u_path_output = f"data/data_source_{source}.json"
         try:
             with open(u_path_output,'w') as out:
                 # write file 'data_source_N.json'
                 out.write(f"{result_list[index]}")
-                print(f"File '/data/data_source_{source}.json' was write successfully ...")
+                print(f"File 'data/data_source_{source}.json' was write successfully ...")
 
         except IndexError as e:
                 """exceptions can be handled later in this block"""
