@@ -11,7 +11,7 @@ git clone copy/paste/link/to/repo
 cd SGM
 ```
 
-2. Install all dependencies:
+2. Install Poetry is a tool for dependency management and packaging in Python:
 ```
 $ make install poetry
 # or
