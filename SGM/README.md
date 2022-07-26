@@ -1,3 +1,37 @@
+## 🎬👀 How it works
+
+[![asciicast](https://asciinema.org/a/PI9szZPfwWPmxphMmtI9TnUrt.svg)]https://asciinema.org/a/PI9szZPfwWPmxphMmtI9TnUrt
+
+## ⚙️ Run locally
+
+1. Clone this repo and enter to the project folder SGM:
+```
+git clone copy/paste/link/to/repo
+
+cd SGM
+```
+
+2. Install all dependencies:
+```
+$ make install poetry
+# or
+$ curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python -
+```
+3. Install all dependencies:
+```
+$ make update
+# or
+$ poetry update
+```
+4. Run the 
+```
+$ make start
+# or
+$ poetry run python app.py
+```
+
+## ✅ Task
+
 At this task you will be evaluated by the following criteria sorted by priority: 
 1. SQL knowledge. 
 2. Data processing. 
