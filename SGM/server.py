@@ -118,17 +118,19 @@ def ask_output(source_dict:SourcesDict, result_list:list):
         """exceptions can be handled later in this block"""
         print(e)
         
-    for index,source in enumerate(source_dict.source_list):
+    for index, source in enumerate(source_dict.source_list):
         u_path_output = f"data/data_source_{source}.json"
         try:
             with open(u_path_output,'w') as out:
                 # write file 'data_source_N.json'
-                out.write(f"{result_list[index]}")
-                print(f"File 'data/data_source_{source}.json' was write successfully ...")
-
-        except IndexError as e:
+                if index <= len(source_dict.source_list):
+                    out.write(f"{result_list[index]}")
+                    print(f"File 'data/data_source_{source}.json' was write successfully ...")
+                else:
+                    break
+        except Exception as e:
                 """exceptions can be handled later in this block"""
-                pass
+                print(e)
             
 """PART OF SQL FUNCTIONS"""
 
