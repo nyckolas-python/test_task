@@ -1,6 +1,6 @@
 ## 🎬👀 How it works
 
-[![asciicast](https://asciinema.org/a/PI9szZPfwWPmxphMmtI9TnUrt.svg)]nyckolas-python/nyckolas-python]
+[![asciicast](https://asciinema.org/a/PI9szZPfwWPmxphMmtI9TnUrt.svg)]
 
 ## ⚙️ Run locally
 
