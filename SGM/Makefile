@@ -4,15 +4,15 @@
 #It allows you to declare the libraries your project depends on and it will manage (install/update) them for you.
 
 start: update
-	poetry run python app.py # run project
+	poetry run python app.py
 
 update:
-	poetry update # update poetry requirements
+	poetry update
 
 install poetry:
-	pip install poetry # install poetry to your system
+	pip install poetry
 
 clean:
-	git clean -Xdf # Delete all files in .gitignore
+	git clean -Xdf
 
 .PHONY: start clean update install
