@@ -1,6 +1,6 @@
 ## 🎬👀 How it works
 
-[![asciicast](https://asciinema.org/a/PI9szZPfwWPmxphMmtI9TnUrt.svg)]
+[![asciicast](https://asciinema.org/a/PI9szZPfwWPmxphMmtI9TnUrt.svg)](https://asciinema.org/a/PI9szZPfwWPmxphMmtI9TnUrt)
 
 ## ⚙️ Run locally
 
